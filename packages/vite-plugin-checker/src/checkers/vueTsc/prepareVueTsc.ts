@@ -43,16 +43,19 @@ export function prepareVueTsc() {
   let shouldPrepare = true
   const targetDirExist = fs.existsSync(targetTsDir)
   if (targetDirExist) {
-    const targetTsVersion = require(path.resolve(targetTsDir, 'package.json')).version
-    const currTsVersion = require('typescript/package.json').version
-    // check fixture versions before re-use
-    if (
-      targetTsVersion === currTsVersion &&
-      fs.existsSync(vueTscFlagFile) &&
-      fs.readFileSync(vueTscFlagFile, 'utf8') === proxyPath
-    ) {
-      shouldPrepare = true
+    try {
+      const targetTsVersion = require(path.resolve(targetTsDir, 'package.json')).version
+      const currTsVersion = require('typescript/package.json').version
+      // check fixture versions before re-use
+      if (
+        targetTsVersion === currTsVersion &&
+        fs.existsSync(vueTscFlagFile) &&
+        fs.readFileSync(vueTscFlagFile, 'utf8') === proxyPath
+      ) {
+        shouldPrepare = true
+      }
     }
+    catch {}
   }
 
   if (shouldPrepare) {
